@@ -5,9 +5,12 @@ requires netifaces: pip install netifaces
 
 # installation
 download
+
 chmod +x monitormode
+
 cp /usr/bin/
 
 # usage
 monitormode
+
 monitormode off
