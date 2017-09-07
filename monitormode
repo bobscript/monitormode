@@ -1,0 +1,63 @@
+#! /usr/bin/env python
+
+#requirements:
+#pip install netifaces
+
+#imports
+import os
+import netifaces
+import sys
+import subprocess
+
+#functions
+def clearscreen():
+	os.system("clear")
+	
+def cmd(command):
+	p = subprocess.Popen(command, stdout=subprocess.PIPE,stderr=subprocess.PIPE)
+	out, err = p.communicate()
+	
+#start of program
+#clearscreen()
+if os.geteuid() != 0:
+	exit("you need to have root privileges to run this script")
+    
+arg = "on"
+
+if len(sys.argv) == 2:
+	arg = str(sys.argv[1])
+
+msg = "select interface to put in monitor mode:"
+
+if arg == "off":
+	msg = "select interface to stop monitor mode:"
+	
+print msg
+
+#get interfaces and list them for selection
+i_list = netifaces.interfaces()
+count = len(i_list)
+
+for x in range (0, count):
+	print(str(x + 1) + " - " + i_list[x])
+
+c = input("")
+
+if c > count:
+	exit("wrong input")
+
+intf = i_list[c - 1]
+i = str(intf)
+
+#run commands for selected interface
+mode = 'monitor'
+msg = "monitor mode for interface " + i + " turned on"
+
+if arg == "off":
+	mode = 'managed'
+	msg = "monitor mode for interface " + i + " turned off"
+
+cmd(['ifconfig', i, 'down'])
+cmd(['iwconfig', i, 'mode', mode])
+cmd(['ifconfig', i, 'up'])
+print msg
