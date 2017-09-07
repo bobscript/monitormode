@@ -8,7 +8,7 @@ download
 
 chmod +x monitormode
 
-cp /usr/bin/
+cp monitormode /usr/bin/
 
 # usage
 monitormode
